@@ -47,7 +47,7 @@ def create_files() -> None:
 		f.write(clear)
 	return
 
-def save_result(res: list) -> None:
+def save_result(domain: str, res: list) -> None:
 	global counter
 	global total
 	resset = list(set(res))
@@ -64,17 +64,17 @@ def save_result(res: list) -> None:
 		if len(element) < 4:
 			continue
 		if len(element) == 4:
-			result_4 += f'{element}\n'
+			result_4 += f'{domain};{element}\n'
 		elif len(element) == 5:
-			result_5 += f'{element}\n'
+			result_5 += f'{domain};{element}\n'
 		elif len(element) == 6:
-			result_6 += f'{element}\n'
+			result_6 += f'{domain};{element}\n'
 		elif len(element) == 7:
-			result_7 += f'{element}\n'
+			result_7 += f'{domain};{element}\n'
 		elif len(element) == 8:
-			result_8 += f'{element}\n'
+			result_8 += f'{domain};{element}\n'
 		else:
-			result_big += f'{element}\n'
+			result_big += f'{domain};{element}\n'
 	if len(result_big) > 0:
 		with open(f'{res_path}big.txt','a') as f:
 			f.write(result_big)
@@ -187,7 +187,7 @@ def domain_splitter(domain: str) -> [str, str, str, str]:
 			subdom = splitted_domain[len(splitted_domain)-i-1]
 	return www, subdom, dom, zone
 
-def dz(dom: str, zone: str) -> None:
+def dz(domain: str, dom: str, zone: str) -> None:
 	res = []
 	if '-' not in dom:
 		res.append(dom)
@@ -248,10 +248,10 @@ def dz(dom: str, zone: str) -> None:
 		res.append(first_word[:8])
 		res.append(first_word[:7])
 		res.append(first_word[:6])
-	save_result(res)
+	save_result(domain, res)
 	return
 
-def wdz(dom: str, zone: str) -> None:
+def wdz(domain: str, dom: str, zone: str) -> None:
 	res = []
 	res.append(('www' + dom.replace('-','') + zone.replace('.',''))[:8])
 	if len(dom) <= 4:
@@ -316,10 +316,10 @@ def wdz(dom: str, zone: str) -> None:
 		res.append(first_word[:8])
 		res.append(first_word[:7])
 		res.append(first_word[:6])
-	save_result(res)
+	save_result(domain, res)
 	return
 
-def sdz(subdom: str, dom: str, zone: str) -> None:
+def sdz(domain: str, subdom: str, dom: str, zone: str) -> None:
 	res = []
 	if '-' not in dom:
 		res.append(dom)
@@ -390,10 +390,10 @@ def sdz(subdom: str, dom: str, zone: str) -> None:
 		res.append(subdom.replace('-','')[:8])
 		res.append(subdom.replace('-','')[:7])
 		res.append(subdom.replace('-','')[:6])
-	save_result(res)
+	save_result(domain, res)
 	return
 
-def wsdz(subdom: str, dom: str, zone: str) -> None:
+def wsdz(domain: str, subdom: str, dom: str, zone: str) -> None:
 	res = []
 	if '-' not in dom:
 		res.append(dom)
@@ -464,7 +464,7 @@ def wsdz(subdom: str, dom: str, zone: str) -> None:
 		res.append(subdom.replace('-','')[:7])
 		res.append(subdom.replace('-','')[:6])
 	res.append(('www' + subdom.replace('-','') + dom.replace('-','') + zone.replace('.',''))[:8])
-	save_result(res)
+	save_result(domain, res)
 	return
 
 def domain_sorter(domain: str) -> None:
@@ -476,13 +476,13 @@ def domain_sorter(domain: str) -> None:
 	#print(clean_domain)
 	www, subdom, dom, zone = domain_splitter(clean_domain)
 	if not www and not subdom:
-		dz(dom, zone)
+		dz(domain, dom, zone)
 	if www and not subdom:
-		wdz(dom, zone)
+		wdz(domain, dom, zone)
 	if subdom and not www:
-		sdz(subdom, dom, zone)
+		sdz(domain, subdom, dom, zone)
 	if subdom and www:
-		wsdz(subdom, dom, zone)
+		wsdz(domain, subdom, dom, zone)
 	return
 
 def main() -> None:
