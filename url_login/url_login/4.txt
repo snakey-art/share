@@ -1,0 +1,3 @@
+https://waba.org.my:2083;waba
+https://p3plzcpnl459688.prod.phx3.secureserver.net:2083;phx3
+https://lkppl.webd.pl:2083;webd
