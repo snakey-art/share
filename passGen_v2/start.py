@@ -5,7 +5,7 @@ import os
 domains = []
 zones = []
 res_path = ''
-workers = 1
+workers = 16
 counter = 0
 total = 0
 
@@ -51,8 +51,8 @@ def save_result(res: list) -> None:
 	global counter
 	global total
 	resset = list(set(res))
-	print(resset)
-	print()
+	#print(resset)
+	#print()
 	global res_path
 	result_big = ''
 	result_8 = ''
@@ -94,7 +94,7 @@ def save_result(res: list) -> None:
 		with open(f'{res_path}4.txt','a') as f:
 			f.write(result_4)
 	counter += 1
-	#print(f'Count: {counter} of {total}')
+	print(f'Count: {counter} of {total}')
 	return
 
 def clean_results() -> None:
@@ -473,7 +473,7 @@ def domain_sorter(domain: str) -> None:
 		clean_domain = clean_domain.split('://')[1]
 	if ':' in clean_domain:
 		clean_domain = clean_domain.split(':')[0]
-	print(clean_domain)
+	#print(clean_domain)
 	www, subdom, dom, zone = domain_splitter(clean_domain)
 	if not www and not subdom:
 		dz(dom, zone)
