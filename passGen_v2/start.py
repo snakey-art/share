@@ -491,7 +491,7 @@ def main() -> None:
 	global res_path
 	time_start = datetime.now().strftime("%Y.%m.%d_%H-%M")
 	cwd = os.getcwd()
-	if os.name = 'posix':
+	if os.name == 'posix':
 		res_path = f'{cwd}/{time_start}/'
 	else:
 		res_path = f'{cwd}\\{time_start}\\'
