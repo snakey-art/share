@@ -26,14 +26,15 @@ def get_input(filename: str) -> bool:
 	global counter
 	global total
 	try:
-		with open(f'./input/{filename}', 'r') as f:
+		with open(f'{os.getcwd()}/input/{filename}', 'r') as f:
 			domains_tmp = f.read().split('\n')
-		if len(domains_tmp) > 0:
-			domains =+ domains_tmp
+		if (len(domains_tmp) > 0):
+			domains = domains + domains_tmp
 			total += len(domains_tmp)
 			return True
 		return False
-	except:
+	except Exception as e:
+		print(e)
 		return False
 
 def create_files() -> None:
@@ -69,17 +70,17 @@ def save_result(domain: str, res: list) -> None:
 		if len(element) < 4:
 			continue
 		if len(element) == 4:
-			result_4 += f'{domain};{element}\n'
+			result_4 += f'{domain.lower()};{element}\n'
 		elif len(element) == 5:
-			result_5 += f'{domain};{element}\n'
+			result_5 += f'{domain.lower()};{element}\n'
 		elif len(element) == 6:
-			result_6 += f'{domain};{element}\n'
+			result_6 += f'{domain.lower()};{element}\n'
 		elif len(element) == 7:
-			result_7 += f'{domain};{element}\n'
+			result_7 += f'{domain.lower()};{element}\n'
 		elif len(element) == 8:
-			result_8 += f'{domain};{element}\n'
+			result_8 += f'{domain.lower()};{element}\n'
 		else:
-			result_big += f'{domain};{element}\n'
+			result_big += f'{domain.lower()};{element}\n'
 	if len(result_big) > 0:
 		with open(f'{res_path}big.txt','a') as f:
 			f.write(result_big)
