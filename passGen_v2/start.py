@@ -5,27 +5,32 @@ import os
 domains = []
 zones = []
 res_path = ''
-workers = 16
+workers = 8
 counter = 0
 total = 0
 
-def get_input() -> bool:
-	global domains
+
+def get_zones() -> bool:
 	global zones
-	global counter
-	global total
 	try:
 		with open('zones.txt', 'r') as f:
 			zones = f.read().split('\n')
 		if len(zones) == 0:
 			return False
+		return True
 	except:
 		return False
+
+def get_input(filename: str) -> bool:
+	global domains
+	global counter
+	global total
 	try:
-		with open('input.txt', 'r') as f:
-			domains = f.read().split('\n')
-		if len(domains) > 0:
-			total = len(domains)
+		with open(f'./input/{filename}', 'r') as f:
+			domains_tmp = f.read().split('\n')
+		if len(domains_tmp) > 0:
+			domains =+ domains_tmp
+			total += len(domains_tmp)
 			return True
 		return False
 	except:
@@ -468,7 +473,7 @@ def wsdz(domain: str, subdom: str, dom: str, zone: str) -> None:
 	return
 
 def domain_sorter(domain: str) -> None:
-	clean_domain = domain
+	clean_domain = domain.lower()
 	if '://' in clean_domain:
 		clean_domain = clean_domain.split('://')[1]
 	if ':' in clean_domain:
@@ -497,8 +502,15 @@ def main() -> None:
 		res_path = f'{cwd}\\{time_start}\\'
 	os.mkdir(res_path)
 	create_files()
-	if not get_input():
-		print('Check input.txt and zones.txt\nExit')
+	if not get_zones():
+		print('Check zones.txt\nExit')
+		return
+	for root, dirs, files in os.walk('./input/'):
+		for filename in files:
+			if ('.txt' in filename):
+				get_input(filename)
+	if total == 0:
+		print('Check input\nExit')
 		return
 	with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
 		executor.map(domain_sorter, domains)
