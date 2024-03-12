@@ -5,7 +5,7 @@ import os
 res_path = ''
 urls = []
 mail_pass = []
-workers = 8
+workers = 1
 counter = 0
 total = 0
 
@@ -153,6 +153,7 @@ def main() -> None:
 	with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
 		executor.map(url_handler, urls)
 	delete_conc_files()
+	print(f'Check it out: {res_path}')
 
 if __name__ == '__main__':
 	main()

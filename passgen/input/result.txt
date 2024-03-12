@@ -1,0 +1,9 @@
+https://waba.org.my:2083;waba;testpass
+https://fourmilepark.org:2083;fourmi;Cornbread
+https://waba.org.my:2083;wabaor;testpass
+https://waba.org.my:2083;wabaorg;testpass
+https://fourmilepark.org:2083;fourmil;Cornbread
+https://fourmilepark.org:2083;fourmile;Cornbread
+https://waba.org.my:2083;wabaorgm;testpass
+https://fourmilepark.org:2083;fourmilepark;Cornbread
+https://testurl.org:2083;testlogin;7es7p@ss

@@ -2,13 +2,13 @@ import concurrent.futures
 from datetime import datetime
 import os
 
+dir_names = ['1_login','2_Login','3_LOGIN','1_login_mix','2_Login_mix','3_LOGIN_mix','static']
 domains = []
 zones = []
 res_path = ''
-workers = 8
+workers = 1
 counter = 0
 total = 0
-
 
 def get_zones() -> bool:
 	global zones
@@ -37,7 +37,16 @@ def get_input(filename: str) -> bool:
 		print(e)
 		return False
 
+def create_dirs() -> None:
+	global dir_names
+	os.mkdir(res_path)
+	os.mkdir(f'{res_path}result/')
+	for element in dir_names:
+		os.mkdir(f'{res_path}result/{element}/')
+	return
+
 def create_files() -> None:
+	global dir_names
 	clear = ''
 	with open(f'{res_path}big.txt','a') as f:
 		f.write(clear)
@@ -51,12 +60,67 @@ def create_files() -> None:
 		f.write(clear)
 	with open(f'{res_path}4.txt','a') as f:
 		f.write(clear)
+	for element in dir_names:
+		with open(f'{res_path}../rules/{element}.txt','r') as f:
+			rules = f.read().split('\n')
+		while ('' in rules):
+			rules.remove('')
+		for rule in rules:
+			with open(f'{res_path}result/{element}/{rule}.txt','a') as f:
+				f.write(clear)
+	return
+
+def gen_passwords(domain: str, resset: list) -> None:
+	global dir_names
+	res = []
+	resset_copy = resset
+	try:
+		for dir_name in dir_names:
+			rules = []
+			with open(f'{res_path}../rules/{dir_name}.txt', 'r') as f:
+				rules = f.read().split('\n')
+			while('' in rules):
+				rules.remove('')
+			for rule in rules:
+				for element in resset:
+					if dir_name == '1_login':
+						res.append(f'{domain.lower()};{element};{element}{rule.replace("%p","")}')
+					elif dir_name == '2_Login':
+						res.append(f'{domain.lower()};{element};{element.capitalize()}{rule.replace("%p","")}')
+					elif dir_name == '3_LOGIN':
+						res.append(f'{domain.lower()};{element};{element.upper()}{rule.replace("%p","")}')	
+					elif dir_name == '1_login_mix':
+						for copy in resset_copy:
+							if copy == element:
+								continue
+							res.append(f'{domain.lower()};{element};{copy}{rule.replace("%p","")}')
+					elif dir_name == '2_Login_mix':
+						for copy in resset_copy:
+							if copy == element:
+								continue
+							res.append(f'{domain.lower()};{element};{copy.capitalize()}{rule.replace("%p","")}')
+					elif dir_name == '3_LOGIN_mix':
+						for copy in resset_copy:
+							if copy == element:
+								continue
+							res.append(f'{domain.lower()};{element};{copy.upper()}{rule.replace("%p","")}')
+					elif dir_name == 'static':
+						res.append(f'{domain.lower()};{element};{rule}')
+				with open(f'{res_path}result/{dir_name}/{rule}.txt', 'a') as f:
+					f.write('\n'.join(res))
+					f.write('\n')
+				res = []
+	except Exception as e:
+		print(e)
 	return
 
 def save_result(domain: str, res: list) -> None:
 	global counter
 	global total
 	resset = list(set(res))
+	while('' in resset):
+		resset.remove('')
+	gen_passwords(domain, resset)
 	#print(resset)
 	#print()
 	global res_path
@@ -501,7 +565,7 @@ def main() -> None:
 		res_path = f'{cwd}/{time_start}/'
 	else:
 		res_path = f'{cwd}\\{time_start}\\'
-	os.mkdir(res_path)
+	create_dirs()
 	create_files()
 	if not get_zones():
 		print('Check zones.txt\nExit')
@@ -513,9 +577,12 @@ def main() -> None:
 	if total == 0:
 		print('Check input\nExit')
 		return
+	while('' in domains):
+		domains.remove('')
 	with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
 		executor.map(domain_sorter, domains)
 	clean_results()
+	print(f'Check it out: {res_path}result/')
 
 if __name__ == "__main__":
 	main()

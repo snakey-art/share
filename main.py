@@ -3,6 +3,31 @@ import runpy
 
 static = ''
 
+def pass_gen():
+	global static
+	print(40*'-')
+	print(f'Static dir: {static}')
+	if os.path.isdir(f'{static}/passgen/'):
+		print('[+] PASSGEN work dir found')
+	else:
+		print(f'[-] PASSGEN work dir not found! Check out {static}/passgen/')
+		return
+	for root, dirs, files in os.walk(f'{static}/passgen/input/'):
+		if len(files) > 0:
+			print('[+] INPUT found')
+		else:
+			print(f'[-] INPUT not found! Check out {static}/passgen/input/')
+			return
+	print('[+] Start script...')
+	if os.name == 'posix':
+		os.chdir(f'{static}/passgen')
+		os.system(f'python3 start_passgen.py')
+	else:
+		os.chdir(f'{static}\\passgen')
+		os.system(f'python start_passgen.py')
+	print('[+] Done')
+	print(40*'-')
+
 def login_gen():
 	global static
 	print(40*'-')
@@ -108,7 +133,7 @@ def main():
 |_______|_______|__|____|''')
 	while True:
 		print(40*'=' + 2*'\n')
-		print('1 - URL + MAIL_PASS\n2 - URL;LOGIN + MAIL_PASS\n3 - LOGIN GEN\n4 - RESERVED\n0 - EXIT')
+		print('1 - URL + MAIL_PASS\n2 - URL;LOGIN + MAIL_PASS\n3 - LOGIN GEN\n4 - PASS GEN\n0 - EXIT')
 		choise = input()
 		if choise == '1':
 			url_mail_pass()
@@ -117,7 +142,7 @@ def main():
 		elif choise == '3':
 			login_gen()
 		elif choise == '4':
-			print('RESERVED')
+			pass_gen()
 		elif choise == '0':
 			return
 
